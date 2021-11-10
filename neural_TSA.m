@@ -61,6 +61,9 @@ f = fs*(0:(L/2)) /L;
 % Calculating the power of the signal
 p = abs(d_one_side(2:end-1)).^2/L;
 
+% Part D: Short-term FT on nonstationary signal
+[S, F, Ts] = stft(ns5, fs,'Window',hamming(256,'periodic'),'OverlapLength',50);
+
 %% 
 
 % load dataset.mat eeg
@@ -111,3 +114,15 @@ plot(f(1:100), p(1:100))
 title('Single sided power amplitute spectrum of the sins signal')
 xlabel('f(Hz)')
 ylabel('Power');
+
+% STFT
+figure(5)
+plot(f(1:100), S(1:100))
+title('Short Term FT of nonstationary signal')
+xlabel('f(Hz)')
+ylabel('|ns5|');
+
+figure(6)
+waterfall(F,Ts,abs(S(:,:,1))')
+xlabel('Freq (Hz)')
+ylabel('Time (s)')
