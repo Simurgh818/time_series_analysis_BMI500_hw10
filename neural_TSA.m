@@ -43,8 +43,15 @@ s6 = s1+s2+s3+s4+s5;
 % Adding noise
 s6_and_noise = s6+ 4*randn(size(t));
 
-% FFT on signal 6
-data_f_two_sided = fft(s6_and_noise);
+% Making nonstationary time series
+ns1 = t.*sin(2*pi*8*t);
+ns2 = t.*(0.8*sin(2*pi*13*t));
+ns3 = t.*(0.7*sin(2*pi*22*t));
+ns4 = t.*(0.6*sin(2*pi*35*t));
+ns5 = ns1 + ns2 + ns3 + ns4;
+
+% FFT on signal 6 and nonstationary 5
+data_f_two_sided = fft(ns5);
 d_two_sided = abs(data_f_two_sided/L);
 half_L = round(L/2)+1;
 d_one_side = d_two_sided(1:half_L);
@@ -72,21 +79,21 @@ p = abs(d_one_side(2:end-1)).^2/L;
 grid on;
 figure(1)
 subplot(5,1,1);
-plot(t,s1);
+plot(t,ns1);
 subplot(5,1,2);
-plot(t,s2);
+plot(t,ns2);
 subplot(5,1,3);
-plot(t,s3);
+plot(t,ns3);
 subplot(5,1,4);
-plot(t,s4);
-subplot(5,1,5);
-plot(t,s5);
+plot(t,ns4);
+% subplot(5,1,5);
+% plot(t,s5);
 xlabel('Time (ms)')
 ylabel('Amplitude')
 
 % Time
 figure(2)
-plot(t,s6_and_noise);
+plot(t,ns5);
 xlabel('Time (ms)')
 ylabel('Amplitude')
 
@@ -96,7 +103,7 @@ figure(3)
 plot(f(1:100), d_one_side(1:100))
 title('Single sided amplitute spectrum of the sum of the sins signal')
 xlabel('f(Hz)')
-ylabel('|s6|');
+ylabel('|ns5|');
 
 % Power
 figure(4)

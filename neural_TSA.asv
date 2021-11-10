@@ -25,6 +25,7 @@
 % Public License for more details.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% A) Making and summing sine waves, Fourier analysis, power structure, compare nonzero freq with sine waves
+close all;
 
 fs = 1000;
 T = 1/fs;
@@ -40,10 +41,14 @@ s5 = 0.5*sin(2*pi*80*t);
 s6 = s1+s2+s3+s4+s5;
 
 % Adding noise
-s6_and_noise = s6+ 2*randn(size(t));
+s6_and_noise = s6+ 4*randn(size(t));
+
+% Making nonstationary time series
+ns1 = t*sin(2*pi*8*t);
+ns2 = 
 
 % FFT on signal 6
-data_f_two_sided = fft(s6);
+data_f_two_sided = fft(s6_and_noise);
 d_two_sided = abs(data_f_two_sided/L);
 half_L = round(L/2)+1;
 d_one_side = d_two_sided(1:half_L);
@@ -85,7 +90,7 @@ ylabel('Amplitude')
 
 % Time
 figure(2)
-plot(t,s6);
+plot(t,s6_and_noise);
 xlabel('Time (ms)')
 ylabel('Amplitude')
 
@@ -100,6 +105,6 @@ ylabel('|s6|');
 % Power
 figure(4)
 plot(f(1:100), p(1:100))
-title('Single sided amplitute spectrum of the sum of the sins signal')
+title('Single sided power amplitute spectrum of the sins signal')
 xlabel('f(Hz)')
 ylabel('Power');
