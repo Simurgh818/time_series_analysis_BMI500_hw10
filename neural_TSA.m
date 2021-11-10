@@ -50,8 +50,15 @@ ns3 = t.*(0.7*sin(2*pi*22*t));
 ns4 = t.*(0.6*sin(2*pi*35*t));
 ns5 = ns1 + ns2 + ns3 + ns4;
 
+% EEG data
+load dataset.mat eeg
+[~, L] = size(eeg); %length of the signal
+t = (0:L-1)*T;
+eeg_mean_subtracted = eeg-mean(eeg);
+
+
 % FFT on signal 6 and nonstationary 5
-data_f_two_sided = fft(ns5);
+data_f_two_sided = fft(eeg_mean_subtracted);
 d_two_sided = abs(data_f_two_sided/L);
 half_L = round(L/2)+1;
 d_one_side = d_two_sided(1:half_L);
@@ -62,13 +69,11 @@ f = fs*(0:(L/2)) /L;
 p = abs(d_one_side(2:end-1)).^2/L;
 
 % Part D: Short-term FT on nonstationary signal
-[S, F, Ts] = stft(ns5, fs,'Window',hamming(256,'periodic'),'OverlapLength',50);
+[S, F, Ts] = stft(eeg_mean_subtracted, fs,'Window',hamming(1024,'periodic'),'OverlapLength',50);
 
 %% 
 
-% load dataset.mat eeg
-% fs = 1000;
-% [~, L] = size(eeg); %length of the signal
+
 % 
 % data_f_two_sided = fft(eeg);
 % d_two_sided = abs(data_f_two_sided/L);
@@ -78,25 +83,25 @@ p = abs(d_one_side(2:end-1)).^2/L;
 % f = fs*(0:(L/2)) /L;
 %% Plots
 
-% The separate sine plots
-grid on;
-figure(1)
-subplot(5,1,1);
-plot(t,ns1);
-subplot(5,1,2);
-plot(t,ns2);
-subplot(5,1,3);
-plot(t,ns3);
-subplot(5,1,4);
-plot(t,ns4);
-% subplot(5,1,5);
-% plot(t,s5);
-xlabel('Time (ms)')
-ylabel('Amplitude')
+% % The separate sine plots
+% grid on;
+% figure(1)
+% subplot(5,1,1);
+% plot(t,ns1);
+% subplot(5,1,2);
+% plot(t,ns2);
+% subplot(5,1,3);
+% plot(t,ns3);
+% subplot(5,1,4);
+% plot(t,ns4);
+% % subplot(5,1,5);
+% % plot(t,s5);
+% xlabel('Time (ms)')
+% ylabel('Amplitude')
 
 % Time
 figure(2)
-plot(t,ns5);
+plot(t,eeg_mean_subtracted);
 xlabel('Time (ms)')
 ylabel('Amplitude')
 
@@ -106,7 +111,7 @@ figure(3)
 plot(f(1:100), d_one_side(1:100))
 title('Single sided amplitute spectrum of the sum of the sins signal')
 xlabel('f(Hz)')
-ylabel('|ns5|');
+ylabel('|eeg|');
 
 % Power
 figure(4)
@@ -120,7 +125,7 @@ figure(5)
 plot(f(1:100), S(1:100))
 title('Short Term FT of nonstationary signal')
 xlabel('f(Hz)')
-ylabel('|ns5|');
+ylabel('|eeg|');
 
 figure(6)
 waterfall(F,Ts,abs(S(:,:,1))')

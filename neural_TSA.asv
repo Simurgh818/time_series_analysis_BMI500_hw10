@@ -50,6 +50,11 @@ ns3 = t.*(0.7*sin(2*pi*22*t));
 ns4 = t.*(0.6*sin(2*pi*35*t));
 ns5 = ns1 + ns2 + ns3 + ns4;
 
+% EEG data
+load dataset.mat eeg
+[~, L] = size(eeg); %length of the signal
+
+
 % FFT on signal 6 and nonstationary 5
 data_f_two_sided = fft(ns5);
 d_two_sided = abs(data_f_two_sided/L);
@@ -62,12 +67,11 @@ f = fs*(0:(L/2)) /L;
 p = abs(d_one_side(2:end-1)).^2/L;
 
 % Part D: Short-term FT on nonstationary signal
+[S, F, Ts] = stft(ns5, fs,'Window',hamming(256,'periodic'),'OverlapLength',50);
 
 %% 
 
-% load dataset.mat eeg
-% fs = 1000;
-% [~, L] = size(eeg); %length of the signal
+
 % 
 % data_f_two_sided = fft(eeg);
 % d_two_sided = abs(data_f_two_sided/L);
@@ -113,3 +117,15 @@ plot(f(1:100), p(1:100))
 title('Single sided power amplitute spectrum of the sins signal')
 xlabel('f(Hz)')
 ylabel('Power');
+
+% STFT
+figure(5)
+plot(f(1:100), S(1:100))
+title('Short Term FT of nonstationary signal')
+xlabel('f(Hz)')
+ylabel('|ns5|');
+
+figure(6)
+waterfall(F,Ts,abs(S(:,:,1))')
+xlabel('Freq (Hz)')
+ylabel('Time (s)')
