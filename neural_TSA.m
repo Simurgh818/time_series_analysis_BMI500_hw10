@@ -71,6 +71,10 @@ p = abs(d_one_side(2:end-1)).^2/L;
 % Part D: Short-term FT on nonstationary signal
 [S, F, Ts] = stft(eeg_mean_subtracted, fs,'Window',hamming(512,'periodic'),'OverlapLength',50);
 
+% Power spectrum function
+[p_, f_, t_] = pspectrum(eeg_mean_subtracted, fs);
+
+
 %% 
 
 
@@ -131,3 +135,8 @@ figure(6)
 waterfall(F,Ts,abs(S(:,:,1))')
 xlabel('Freq (Hz)')
 ylabel('Time (s)')
+
+figure(7)
+plot(f_, p_);
+xlabel('freq (Hz)')
+ylabel('amplitude')
