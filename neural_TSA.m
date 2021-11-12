@@ -69,7 +69,7 @@ f = fs*(0:(L/2)) /L;
 p = abs(d_one_side(2:end-1)).^2/L;
 
 % Part D: Short-term FT on nonstationary signal
-[S, F, Ts] = stft(eeg_mean_subtracted, fs,'Window',hamming(1024,'periodic'),'OverlapLength',50);
+[S, F, Ts] = stft(eeg_mean_subtracted, fs,'Window',hamming(512,'periodic'),'OverlapLength',50);
 
 %% 
 
